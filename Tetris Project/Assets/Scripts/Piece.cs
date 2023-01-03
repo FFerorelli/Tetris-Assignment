@@ -51,7 +51,13 @@ public class Piece : MonoBehaviour
     void Update()
     {
         board.Clear(this);
-
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Move(Vector2Int.down);
+            }
+        }
         if (Input.GetKeyDown(KeyCode.A))
         {
             Move(Vector2Int.left);
