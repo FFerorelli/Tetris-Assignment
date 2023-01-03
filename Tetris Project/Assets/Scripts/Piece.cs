@@ -41,6 +41,13 @@ public class Piece : MonoBehaviour
         return valid;
 
     }
+    private void HardDrop()
+    {
+        while (Move(Vector2Int.down))
+        {
+            continue;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -51,12 +58,14 @@ public class Piece : MonoBehaviour
     void Update()
     {
         board.Clear(this);
-        if (Input.GetKey(KeyCode.S))
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                Move(Vector2Int.down);
-            }
+            HardDrop();
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+                Move(Vector2Int.down);          
         }
         if (Input.GetKeyDown(KeyCode.A))
         {
