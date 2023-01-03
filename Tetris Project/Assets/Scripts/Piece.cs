@@ -51,12 +51,19 @@ public class Piece : MonoBehaviour
     }
     private void Rotate(int direction)
     {
-        {
+        // Store the current rotation in case the rotation fails
+        // and we need to revert
+        int originalRotation = rotationIndex;
 
-            // Rotate all of the cells using a rotation matrix
-            rotationIndex = Wrap(rotationIndex + direction, 0, 4);
-            ApplyRotationMatrix(direction);
-            
+        // Rotate all of the cells using a rotation matrix
+        rotationIndex = Wrap(rotationIndex + direction, 0, 4);
+        ApplyRotationMatrix(direction);
+
+        // Revert the rotation if the wall kick tests fail
+        if (!TestWallKicks(rotationIndex, direction))
+        {
+            rotationIndex = originalRotation;
+            ApplyRotationMatrix(-direction);
         }
     }
     private void ApplyRotationMatrix(int direction)
@@ -89,6 +96,34 @@ public class Piece : MonoBehaviour
 
             cells[i] = new Vector3Int(x, y, 0);
         }
+    }
+    private bool TestWallKicks(int rotationIndex, int rotationDirection)
+    {
+        int wallKickIndex = GetWallKickIndex(rotationIndex, rotationDirection);
+
+        for (int i = 0; i < data.wallKicks.GetLength(1); i++)
+        {
+            Vector2Int translation = data.wallKicks[wallKickIndex, i];
+
+            if (Move(translation))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private int GetWallKickIndex(int rotationIndex, int rotationDirection)
+    {
+        int wallKickIndex = rotationIndex * 2;
+
+        if (rotationDirection < 0)
+        {
+            wallKickIndex--;
+        }
+
+        return Wrap(wallKickIndex, 0, data.wallKicks.GetLength(0));
     }
     private int Wrap(int input, int min, int max)
     {
