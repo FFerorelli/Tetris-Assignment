@@ -51,27 +51,43 @@ public class Piece : MonoBehaviour
     }
     private void Rotate(int direction)
     {
-        this.rotationIndex = Wrap(this.rotationIndex + direction, 0, 4);
-        for (int i = 0; i < this.cells.Length; i++)
         {
-            Vector3 cells = this.cells[i];
+
+            // Rotate all of the cells using a rotation matrix
+            rotationIndex = Wrap(rotationIndex + direction, 0, 4);
+            ApplyRotationMatrix(direction);
+            
+        }
+    }
+    private void ApplyRotationMatrix(int direction)
+    {
+        float[] matrix = Data.RotationMatrix;
+
+        // Rotate all of the cells using the rotation matrix
+        for (int i = 0; i < cells.Length; i++)
+        {
+            Vector3 cell = cells[i];
+
             int x, y;
 
-            switch (this.data.tetromino)
+            switch (data.tetromino)
             {
                 case Tetromino.I:
                 case Tetromino.O:
-                    cells.x -= 0.5f;
-                    cells.y -= 0.5f;
-                    x = Mathf.CeilToInt((cells.x * Data.RotationMatrix[0] * direction) + (cells.y * Data.RotationMatrix[1] * direction));
-                    y = Mathf.CeilToInt((cells.x * Data.RotationMatrix[2] * direction) + (cells.y * Data.RotationMatrix[3] * direction));
+                    // "I" and "O" are rotated from an offset center point
+                    cell.x -= 0.5f;
+                    cell.y -= 0.5f;
+                    x = Mathf.CeilToInt((cell.x * matrix[0] * direction) + (cell.y * matrix[1] * direction));
+                    y = Mathf.CeilToInt((cell.x * matrix[2] * direction) + (cell.y * matrix[3] * direction));
                     break;
+
                 default:
-                    x = Mathf.RoundToInt((cells.x * Data.RotationMatrix[0] * direction) + (cells.y * Data.RotationMatrix[1] * direction));
-                    y = Mathf.RoundToInt((cells.x * Data.RotationMatrix[2] * direction) + (cells.y * Data.RotationMatrix[3] * direction));
+                    x = Mathf.RoundToInt((cell.x * matrix[0] * direction) + (cell.y * matrix[1] * direction));
+                    y = Mathf.RoundToInt((cell.x * matrix[2] * direction) + (cell.y * matrix[3] * direction));
                     break;
             }
-            this.cells[i] = new Vector3Int(x, y, 0);
+
+            cells[i] = new Vector3Int(x, y, 0);
         }
     }
     private int Wrap(int input, int min, int max)
