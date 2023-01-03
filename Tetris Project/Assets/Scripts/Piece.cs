@@ -7,6 +7,7 @@ public class Piece : MonoBehaviour
     public TetrominoData data { get; private set; }
     public Vector3Int[] cells { get; private set; }
     public Vector3Int position { get; private set; }
+    public int rotationIndex { get; private set; }
 
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
@@ -48,6 +49,42 @@ public class Piece : MonoBehaviour
             continue;
         }
     }
+    private void Rotate(int direction)
+    {
+        this.rotationIndex = Wrap(this.rotationIndex + direction, 0, 4);
+        for (int i = 0; i < this.cells.Length; i++)
+        {
+            Vector3 cells = this.cells[i];
+            int x, y;
+
+            switch (this.data.tetromino)
+            {
+                case Tetromino.I:
+                case Tetromino.O:
+                    cells.x -= 0.5f;
+                    cells.y -= 0.5f;
+                    x = Mathf.CeilToInt((cells.x * Data.RotationMatrix[0] * direction) + (cells.y * Data.RotationMatrix[1] * direction));
+                    y = Mathf.CeilToInt((cells.x * Data.RotationMatrix[2] * direction) + (cells.y * Data.RotationMatrix[3] * direction));
+                    break;
+                default:
+                    x = Mathf.RoundToInt((cells.x * Data.RotationMatrix[0] * direction) + (cells.y * Data.RotationMatrix[1] * direction));
+                    y = Mathf.RoundToInt((cells.x * Data.RotationMatrix[2] * direction) + (cells.y * Data.RotationMatrix[3] * direction));
+                    break;
+            }
+            this.cells[i] = new Vector3Int(x, y, 0);
+        }
+    }
+    private int Wrap(int input, int min, int max)
+    {
+        if (input < min)
+        {
+            return max - (min - input) % (max - min);
+        }
+        else
+        {
+            return min + (input - min) % (max - min);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +95,14 @@ public class Piece : MonoBehaviour
     void Update()
     {
         board.Clear(this);
-
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Rotate(-1);
+        }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            Rotate(1);
+        }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             HardDrop();
