@@ -24,12 +24,21 @@ public class Piece : MonoBehaviour
             cells[i] = (Vector3Int)data.cells[i];
         }
     }
-    private void Move(Vector2Int translation)
+    private bool Move(Vector2Int translation)
     {
-        Vector3Int newPosition = this.position;
+        Vector3Int newPosition = position;
         newPosition.x += translation.x;
         newPosition.y += translation.y;
-        this.position = newPosition;
+
+        bool valid = board.IsValidPosition(this, newPosition);
+
+        // Only save the movement if the new position is valid
+        if (valid)
+        {
+            position = newPosition;
+        }
+
+        return valid;
 
     }
     // Start is called before the first frame update

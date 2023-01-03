@@ -56,7 +56,30 @@ public class Board : MonoBehaviour
             tilemap.SetTile(tilePosition, null);
         }
     }
+    public bool IsValidPosition(Piece piece, Vector3Int position)
+    {
+        RectInt bounds = Bounds;
 
+        // The position is only valid if every cell is valid
+        for (int i = 0; i < piece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = piece.cells[i] + position;
+
+            // An out of bounds tile is invalid
+            if (!bounds.Contains((Vector2Int)tilePosition))
+            {
+                return false;
+            }
+
+            // A tile already occupies the position, thus invalid
+            if (tilemap.HasTile(tilePosition))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
     // Update is called once per frame
     void Update()
     {
