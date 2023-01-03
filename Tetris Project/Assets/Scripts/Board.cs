@@ -7,6 +7,15 @@ public class Board : MonoBehaviour
     public Tilemap tilemap { get; private set; }
     public Vector3Int spawnPosition = new Vector3Int(-1, 8, 0);
     public TetrominoData[] tetrominoes;
+    public Vector2Int boardSize = new Vector2Int(10, 20);
+    public RectInt Bounds
+    {
+        get
+        {
+            Vector2Int position = new Vector2Int(-boardSize.x / 2, -boardSize.y / 2);
+            return new RectInt(position, boardSize);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +48,15 @@ public class Board : MonoBehaviour
             tilemap.SetTile(tilePosition, piece.data.tile);
         }
     }
+    public void Clear(Piece piece)
+    {
+        for (int i = 0; i < piece.cells.Length; i++)
+        {
+            Vector3Int tilePosition = piece.cells[i] + piece.position;
+            tilemap.SetTile(tilePosition, null);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
