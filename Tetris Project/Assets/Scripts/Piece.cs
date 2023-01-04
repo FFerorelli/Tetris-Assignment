@@ -49,11 +49,33 @@ public class Piece : MonoBehaviour
         if (valid)
         {
             position = newPosition;
-            this.lockTime = 0f;
+            moveTime = Time.time + moveDelay;
+            lockTime = 0f; // reset
         }
 
         return valid;
+    }
+    private void HandleMoveInputs()
+    {
+        // Soft drop movement
+        if (Input.GetKey(KeyCode.S))
+        {
+            if (Move(Vector2Int.down))
+            {
+                // Update the step time to prevent double movement
+                stepTime = Time.time + stepDelay;
+            }
+        }
 
+        // Left/right movement
+        if (Input.GetKey(KeyCode.A))
+        {
+            Move(Vector2Int.left);
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            Move(Vector2Int.right);
+        }
     }
     private void HardDrop()
     {
@@ -177,10 +199,15 @@ public class Piece : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         board.Clear(this);
+
+        // We use a timer to allow the player to make adjustments to the piece
+        // before it locks in place
         lockTime += Time.deltaTime;
+
+        // Handle rotation
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Rotate(-1);
@@ -189,27 +216,26 @@ public class Piece : MonoBehaviour
         {
             Rotate(1);
         }
+
+        // Handle hard drop
         if (Input.GetKeyDown(KeyCode.Space))
         {
             HardDrop();
         }
-        if (Input.GetKeyDown(KeyCode.S))
+
+        // Allow the player to hold movement keys but only after a move delay
+        // so it does not move too fast
+        if (Time.time > moveTime)
         {
-                Move(Vector2Int.down);          
+            HandleMoveInputs();
         }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Move(Vector2Int.left);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            Move(Vector2Int.right);
-        }
+
         // Advance the piece to the next row every x seconds
         if (Time.time > stepTime)
         {
             Step();
         }
+
         board.Set(this);
     }
 }
