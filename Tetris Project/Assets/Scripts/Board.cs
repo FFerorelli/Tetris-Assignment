@@ -157,6 +157,7 @@ public class Board : MonoBehaviour
     public void GameOver()
     {
         tilemap.ClearAllTiles();
+        GameController.Instance.ResetGame();
 
         // Do anything else you want on game over here..
     }

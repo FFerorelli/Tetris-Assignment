@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,13 @@ public class GameController : MonoSingleton<GameController>
         lines += addedLine;
         UIController.Instance.UpdateLines(lines);
     }
+    public void ResetGame()
+    {
+        score = 0;
+        lines = 0;
+        UIController.Instance.UpdateScore(score);
+        UIController.Instance.UpdateLines(lines);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -31,4 +39,6 @@ public class GameController : MonoSingleton<GameController>
     {
         
     }
+
+
 }
