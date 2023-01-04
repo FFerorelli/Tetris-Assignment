@@ -100,6 +100,7 @@ public class Board : MonoBehaviour
             // because the tiles above will fall down when a row is cleared
             if (IsLineFull(row))
             {
+                GameController.Instance.lineCombo++;
                 LineClear(row);
             }
             else
@@ -107,6 +108,8 @@ public class Board : MonoBehaviour
                 row++;
             }
         }
+        GameController.Instance.AddScore();
+        GameController.Instance.lineCombo = 0;
     }
 
     public bool IsLineFull(int row)
@@ -137,7 +140,6 @@ public class Board : MonoBehaviour
             Vector3Int position = new Vector3Int(col, row, 0);
             tilemap.SetTile(position, null);           
         }
-        GameController.Instance.AddScore(40);
         GameController.Instance.AddLine(1);
         // Shift every row above down one
         while (row < bounds.yMax)
