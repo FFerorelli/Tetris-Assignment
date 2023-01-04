@@ -24,6 +24,9 @@ public class GameController : MonoSingleton<GameController>
         lines = 0;
         UIController.Instance.UpdateScore(score);
         UIController.Instance.UpdateLines(lines);
+        AudioController.Instance.StopThemeMusic();
+        AudioController.Instance.PlayThemeMusic();
+
     }
 
     // Start is called before the first frame update
@@ -31,6 +34,7 @@ public class GameController : MonoSingleton<GameController>
     {
         UIController.Instance.UpdateScore(score);
         UIController.Instance.UpdateLines(lines);
+        AudioController.Instance.PlayThemeMusic();
 
     }
 
