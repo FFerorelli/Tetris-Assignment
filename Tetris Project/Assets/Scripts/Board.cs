@@ -138,6 +138,7 @@ public class Board : MonoBehaviour
             tilemap.SetTile(position, null);           
         }
         GameController.Instance.AddScore(40);
+        GameController.Instance.AddLine(1);
         // Shift every row above down one
         while (row < bounds.yMax)
         {

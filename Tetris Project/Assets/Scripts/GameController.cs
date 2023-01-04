@@ -5,16 +5,25 @@ using UnityEngine;
 public class GameController : MonoSingleton<GameController>
 {
     public int score = 0;
+    public int lines = 0;
     public bool isPaused = false;
     public void AddScore(int points)
     {
         score += points;
-        Debug.Log(score);
+        UIController.Instance.UpdateScore(score);
+    } 
+    public void AddLine(int addedLine)
+    {
+        lines += addedLine;
+        UIController.Instance.UpdateLines(lines);
     }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        UIController.Instance.UpdateScore(score);
+        UIController.Instance.UpdateLines(lines);
+
     }
 
     // Update is called once per frame
