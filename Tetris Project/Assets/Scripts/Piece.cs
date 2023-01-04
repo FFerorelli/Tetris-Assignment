@@ -9,11 +9,23 @@ public class Piece : MonoBehaviour
     public Vector3Int position { get; private set; }
     public int rotationIndex { get; private set; }
 
+    public float stepDelay = 1f;
+    public float moveDelay = 0.1f;
+    public float lockDelay = 0.5f;
+
+    private float stepTime;
+    private float moveTime;
+    private float lockTime;
+
     public void Initialize(Board board, Vector3Int position, TetrominoData data)
     {
         this.data = data;
         this.board = board;
         this.position = position;
+
+        stepTime = Time.time + stepDelay;
+        moveTime = Time.time + moveDelay;
+        lockTime = 0f;
 
         if (cells == null)
         {
@@ -37,6 +49,7 @@ public class Piece : MonoBehaviour
         if (valid)
         {
             position = newPosition;
+            this.lockTime = 0f;
         }
 
         return valid;
@@ -48,6 +61,8 @@ public class Piece : MonoBehaviour
         {
             continue;
         }
+
+        Lock();
     }
     private void Rotate(int direction)
     {
@@ -125,6 +140,24 @@ public class Piece : MonoBehaviour
 
         return Wrap(wallKickIndex, 0, data.wallKicks.GetLength(0));
     }
+    private void Step()
+    {
+        stepTime = Time.time + stepDelay;
+
+        // Step down to the next row
+        Move(Vector2Int.down);
+
+        // Once the piece has been inactive for too long it becomes locked
+        if (lockTime >= lockDelay)
+        {
+            Lock();
+        }
+    }
+    private void Lock()
+    {
+        board.Set(this);
+        board.SpawnPiece();
+    }
     private int Wrap(int input, int min, int max)
     {
         if (input < min)
@@ -146,6 +179,7 @@ public class Piece : MonoBehaviour
     void Update()
     {
         board.Clear(this);
+        lockTime += Time.deltaTime;
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Rotate(-1);
@@ -169,6 +203,11 @@ public class Piece : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D))
         {
             Move(Vector2Int.right);
+        }
+        // Advance the piece to the next row every x seconds
+        if (Time.time > stepTime)
+        {
+            Step();
         }
         board.Set(this);
     }
