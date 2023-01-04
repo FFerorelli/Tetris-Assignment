@@ -9,7 +9,7 @@ public class Piece : MonoBehaviour
     public Vector3Int position { get; private set; }
     public int rotationIndex { get; private set; }
 
-    public float stepDelay = 1f;
+
     public float moveDelay = 0.1f;
     public float lockDelay = 0.5f;
 
@@ -23,7 +23,7 @@ public class Piece : MonoBehaviour
         this.board = board;
         this.position = position;
 
-        stepTime = Time.time + stepDelay;
+        stepTime = Time.time + GameController.Instance.stepDelay;
         moveTime = Time.time + moveDelay;
         lockTime = 0f;
 
@@ -63,7 +63,7 @@ public class Piece : MonoBehaviour
             if (Move(Vector2Int.down))
             {
                 // Update the step time to prevent double movement
-                stepTime = Time.time + stepDelay;
+                stepTime = Time.time + GameController.Instance.stepDelay;
             }
         }
 
@@ -164,7 +164,7 @@ public class Piece : MonoBehaviour
     }
     private void Step()
     {
-        stepTime = Time.time + stepDelay;
+        stepTime = Time.time + GameController.Instance.stepDelay;
 
         // Step down to the next row
         Move(Vector2Int.down);

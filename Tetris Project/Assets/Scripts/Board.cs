@@ -36,6 +36,7 @@ public class Board : MonoBehaviour
         {
             GameOver();
         }
+        GameController.Instance.SpeedUp();
     }
     private void Awake()
     {

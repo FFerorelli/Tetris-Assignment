@@ -8,7 +8,7 @@ public class GameController : MonoSingleton<GameController>
     public int score = 0;
     public int lines = 0;
     public int lineCombo = 0;
-    public bool isPaused = false;
+    public float stepDelay = 1f;
     public void AddScore()
     {
         int points = 0;
@@ -34,6 +34,13 @@ public class GameController : MonoSingleton<GameController>
         score += points;
         UIController.Instance.UpdateScore(score);
     } 
+    public void SpeedUp()
+    {
+        if (stepDelay > 0.1)
+        {
+            stepDelay = (float)(stepDelay - 0.01);
+        }
+    }
     public void AddLine(int addedLine)
     {
         lines += addedLine;
@@ -43,6 +50,7 @@ public class GameController : MonoSingleton<GameController>
     {
         score = 0;
         lines = 0;
+        stepDelay = 1f;
         UIController.Instance.UpdateScore(score);
         UIController.Instance.UpdateLines(lines);
         AudioController.Instance.StopThemeMusic();
