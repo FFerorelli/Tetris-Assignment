@@ -135,9 +135,9 @@ public class Board : MonoBehaviour
         for (int col = bounds.xMin; col < bounds.xMax; col++)
         {
             Vector3Int position = new Vector3Int(col, row, 0);
-            tilemap.SetTile(position, null);
+            tilemap.SetTile(position, null);           
         }
-
+        GameController.Instance.AddScore(40);
         // Shift every row above down one
         while (row < bounds.yMax)
         {
