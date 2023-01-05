@@ -9,6 +9,13 @@ public class GameController : MonoSingleton<GameController>
     public int lines = 0;
     public int lineCombo = 0;
     public float stepDelay = 1f;
+
+        // SCORE SYSTEM
+        // 1 line Points - 40
+        // 2 lines Points - 100
+        // 3 lines Points - 300
+        // 4 lines Points - 1200
+
     public void AddScore()
     {
         int points = 0;
