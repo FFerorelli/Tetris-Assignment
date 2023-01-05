@@ -10,11 +10,11 @@ public class UIController : MonoSingleton<UIController>
     public TextMeshProUGUI LinesCleared;
     public void UpdateScore(int ScoreCount)
     {
-        ScoreValue.text = "SCORE: " + ScoreCount;
+        ScoreValue.text = "SCORE: <br>" + ScoreCount;
     } 
     public void UpdateLines(int LineCount)
     {
-        LinesCleared.text = "LINE: " + LineCount;
+        LinesCleared.text = "LINE: <br>" + LineCount;
     }
     // Start is called before the first frame update
     void Start()
